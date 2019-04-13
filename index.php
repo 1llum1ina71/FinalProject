@@ -12,6 +12,10 @@
 	    case '/404' :
 	    	require __DIR__ . '/views/404.php';
 	    	break;
+	    // Controllers
+	    // Database queries
+	    case '/test' :
+	    	require __DIR__ . '/controllers/test.php';
 	}
 
 ?>

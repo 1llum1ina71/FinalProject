@@ -1,5 +1,18 @@
 $(document).ready(function(){
 
+	// Ajax setup
+	$.ajaxSetup({
+	    beforeSend: function(xhr) {
+	        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+	    }
+	});
+
+	// Ajax test
+	// This is how we will get data from our database
+	$.get('/test', function(data,status) {
+		alert(data);
+	});
+
 	let currentTotal = 0.00;
 	
 	createMenuButtons();
