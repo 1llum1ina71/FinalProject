@@ -14,9 +14,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-12 col-md-8 col-lg-6">
-		
-	</div>
 </div>
 
 <?php include 'layouts/close_page.html'?>

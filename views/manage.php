@@ -10,7 +10,7 @@
 					<div class="menu-display display-overlay">
 						<div class="menu-item-container"></div>
 						<div class="summary-box">
-							<p><span>Total: </span><span class="total-amt">$ 0.00</span></p>
+							<p><span>Total: </span><span class="total-amt">$0.00</span></p>
 						</div>
 					</div>
 				</div>
