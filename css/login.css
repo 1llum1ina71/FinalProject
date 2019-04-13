@@ -1,0 +1,43 @@
+
+.vertical-center {
+  min-height: 36vh;
+  display: flex;
+  align-items: center;
+}
+.keypad {
+	padding: 0px 20px;
+}
+.key-button-container {
+	padding: 4px;
+}
+.key-button {
+	font-size:18px;
+	font-style:bold; 
+	color: #0062cc;
+	padding: 24px 12px;
+	background: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0, 0.4));
+	border-radius: 3px;
+	border: 1px solid #555150;
+
+}
+.key-button:hover {
+	background: linear-gradient( #0062cc, rgba(0,0,40, 0.1));
+	border: 1px solid #555150;
+}
+.keypad-display-container {
+	padding-left: 9px;
+	padding-right: 9px;
+}
+.keypad-display {
+	max-height: 138px;
+	border: 2px inset #b9b5b4;
+	height: 25vw;
+	max-height: 73px;
+	background-color: white !important;
+	display: flex;
+  	align-items: center;
+}
+.keypad-display h3 {
+	text-align: center;
+	width: 100%;
+}

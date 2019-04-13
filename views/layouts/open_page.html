@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<script href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		
+		<link rel="stylesheet" href="../css/main.css">
+		<script src="../scripts/main.js"></script>
+
+		<?php $url = $_SERVER['REQUEST_URI'];
+			$parts = parse_url($url);
+			$path = $parts['path'];
+			$segments = explode('/', $path);
+			
+			if( count($segments) > 1){
+				echo "<link rel='stylesheet' href='../css/".$segments[count($segments) - 1].".css'>";
+				echo "<script src='../scripts/".$segments[count($segments) - 1].".js'></script>";
+			}
+		?>
+	</head>
+	<body>
+			
+
+

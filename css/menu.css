@@ -1,0 +1,34 @@
+.menu-display {
+	border: 1px solid black; 
+	box-shadow: inset 0px 0px 18px 7px black; 
+	height: 75vh;
+	padding: 30px;
+}
+.summary-box {
+	position: absolute;
+	bottom: 30px;
+	right: 62px;
+	border-top: black;
+}
+.menu-btn {
+	border-radius: 0px;
+}
+.item {
+	cursor: pointer;
+}
+.item p {
+	margin-bottom: 0px;	
+}
+.item-name {
+	width:50%;
+}
+.item-price {
+	width: 50%;
+	float: right;
+}
+.selected {
+	background: linear-gradient(rgba( 0, 0, 0, 0.9), rgba( 0, 0, 0, 0.6) );
+}
+.selected p {
+	color: white;
+}
