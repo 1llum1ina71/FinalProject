@@ -89,7 +89,10 @@ $(document).ready(function(){
 		}
 	}
 	function deleteDisplayItem() {
-		let price = parseFloat($('.item.selected').find('.item-price').text());
+		let price = 0.00;
+		$('.item.selected').each(function() {
+			price += parseFloat($(this).find('.item-price').text());
+		});
 		currentTotal -= price;
 		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
 		$('.item.selected').remove();
