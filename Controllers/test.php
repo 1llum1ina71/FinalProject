@@ -1,4 +1,7 @@
 <?php 
-
-echo 'ajax test';
+$test = "";
+if(isset($_POST['id'])){
+	$test = $_POST['id'];
+}
+echo 'ajax test ' . $test;
 ?>

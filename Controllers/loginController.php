@@ -9,5 +9,16 @@
 	        break;
 	    }
 	}
+	function checkLoginInfo() {
+		//
+	}
 
+	function loginUser() {
+		//
+	}
+
+	function logoutUser() {
+		//
+	}
+	 
 ?>

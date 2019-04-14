@@ -10,4 +10,14 @@
 	    }
 	}
 
+	function getFoodItems() {
+		//
+	}
+
+	function viewCurrentOrders() {
+		//
+	}
+
+	function  
+
 ?>

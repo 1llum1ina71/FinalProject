@@ -8,10 +8,18 @@ $(document).ready(function(){
 	});
 
 	// Ajax test
-	// This is how we will get data from our database
+	// This is how we will get and send data from our database
 	$.get('/test', function(data,status) {
 		alert(data);
 	});
+	$.post('/test',
+		{
+			id: 'This is a post test.'
+		},
+		function(data,status){
+			alert(data);
+		}
+	);
 
 	let currentTotal = 0.00;
 	

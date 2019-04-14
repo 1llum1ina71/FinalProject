@@ -12,6 +12,14 @@ $(document).ready(function(){
 	$.get('/test', function(data,status) {
 		alert(data);
 	});
+	$.post('/test',
+		{
+			id: 'This is a post test.'
+		},
+		function(data,status){
+			alert(data);
+		}
+	);
 
 	let currentTotal = 0.00;
 	

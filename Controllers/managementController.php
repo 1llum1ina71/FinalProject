@@ -10,4 +10,24 @@
 	    }
 	}
 
+	function getTotalProfitForDay(){
+		//
+	}
+	
+	function getWageStatistics() {
+		//
+	}
+
+	function logoutUser() {
+		//
+	}
+
+	function getVendersList() {
+		//
+	}
+
+	function viewSupplyOrders() {
+		//
+	}
+	
 ?>
