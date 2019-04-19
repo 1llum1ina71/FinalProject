@@ -5,7 +5,7 @@
 <div class="container pt-80">
 	<div class="container col-12 justify-content-center" style="margin-top: 20px; background-color: white;">
 		<div class="row">
-			<div class="col-12 col-sm-12 col-md-6">
+			<div class="col-12 col-sm-12 col-md-6 mb-10">
 				<div class="card">
 					<div class="menu-display display-overlay">
 						<div class="menu-item-container"></div>
@@ -15,11 +15,25 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-sm-12 col-md-6">
-				<div class="card menu-btns"></div>
+			<div class="col-12 col-sm-12 col-md-6 mb-10">
+				<div class="card item-btns mb-10"></div>
+				<div class="card">
+					<div class="utility-btns"></div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 mb-10">
+				
 			</div>
 		</div>
 	</div>
 </div>
+
+<style>
+	.hide {
+		display: none;
+	}
+</style>
 
 <?php include 'layouts/close_page.html'?>

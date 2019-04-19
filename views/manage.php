@@ -19,7 +19,7 @@
 					</div>
 				</div>
 				<div class="card mb-10">
-					<h4>Logged in workers</h4>
+					<h5>Logged in workers</h5>
 					<hr>
 					<div class="row card-item">
 						<div class="col-5">
