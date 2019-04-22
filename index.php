@@ -17,8 +17,14 @@
 	    	break;
 	    // Controllers
 	    // Database queries
-	    case '/test' :
-	    	require __DIR__ . '/controllers/test.php';
+	    case '/loginController' :
+	    	require __DIR__ . '/controllers/loginController.php';
+	    	break;
+	    case '/menuController' :
+	    	require __DIR__ . '/controllers/menuController.php';
+	    	break;
+	    case '/managementController' :
+	    	require __DIR__ . '/controllers/managementController.php';
 	    	break;
 	    default: 
 	    	echo "test";

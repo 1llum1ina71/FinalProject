@@ -1,5 +1,19 @@
-<?php include 'layouts/open_page.html';
-	include 'layouts/nav.html'
+<?php 
+	include 'layouts/open_page.html';
+	include 'layouts/nav.html';
+
+	$user = "";
+	$password = "";
+
+	function checkIfUserIsLoggedIn() {
+		if(isset($_POST['user'])){
+			if(isset($_POST['password'])){
+				$user = $_POST['user'];
+				$password = $_POST['password'];
+				// Send query to database
+			}
+		}		
+	}
 ?>
 
 <div class="container pt-80">
@@ -17,23 +31,15 @@
 			</div>
 			<div class="col-12 col-sm-12 col-md-6 mb-10">
 				<div class="card item-btns mb-10"></div>
-				<div class="card">
-					<div class="utility-btns"></div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-12 mb-10">
-				
+				<div class="card utility-btns"></div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<style>
-	.hide {
-		display: none;
-	}
-</style>
+<form method="post" class="navigation" action="/manage">
+	<input type="hidden" name="user" value="<?php echo $user?>">
+	<input type="hidden" name="password" value="<?php echo $password?>">
+</form>
 
 <?php include 'layouts/close_page.html'?>

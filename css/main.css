@@ -17,8 +17,17 @@
 .mb-10 {
 	margin-bottom: 10px !important;
 }
+.mb-5 {
+	margin-bottom: 5px !important;
+}
 .plr-6 {
 	padding: 5px 5px;
+}
+.pt-16 {
+	padding-top: 16px !important;
+}
+.pb-16 {
+	padding-bottom: 16px !important;
 }
 .ptb-20 {
 	padding-top: 20px;
@@ -26,6 +35,12 @@
 }
 .pt-80 {
 	padding-top: 80px !important;
+}
+.bb-gray-1 {
+	border-bottom: 1px solid #ccc !important;
+}
+.bt-black-1 {
+	border-top: 1px solid black !important;
 }
 .card {
 	padding: 20px 30px;

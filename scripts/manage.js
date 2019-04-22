@@ -1,122 +1,151 @@
 $(document).ready(function(){
 
+	let masonry = new Masonry('.grid');
+	masonry.layout();
+
 	// Ajax setup
 	$.ajaxSetup({
 	    beforeSend: function(xhr) {
 	        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
 	    }
 	});
-
-	// Ajax test
-	// This is how we will get data from our database
-	$.get('/test', function(data,status) {
-		//alert(data);
-	});
-	$.post('/test',
+	// Get data for Labor and statistics
+	$.post('/managementController',
 		{
-			id: 'This is a post test.'
+			action: 'getWageAndLaborStatistics'
+		},
+		function(data,status) {
+			let stats = JSON.parse(data);
+
+			let items = "<div class='row card-item'><div class='col-7'><p>Total Sales</p></div>"
+			+ "<div class='col-5 text-right'>" + stats.sales + "</div></div>"
+			+ "<div class='row card-item'><div class='col-7'><p>Total Discounts</p></div>"
+			+ "<div class='col-5 text-right'>" + stats.discounts + "</div></div>"
+			+ "<div class='row card-item'><div class='col-7'><p>Total Labor Hours</p></div>"
+			+ "<div class='col-5 text-right'>" + stats.labor_hours + "</div></div>"
+			+ "<div class='row card-item'><div class='col-7'><p>Total Sales</p></div>"
+			+ "<div class='col-5 text-right'>" + stats.labor_wages + "</div></div>"
+			+ "<div class='row card-item'><div class='col-7'><p>Labor Percentage</p></div>"
+			+ "<div class='col-5 text-right'>" + ( stats.labor_percent_of_profit * 100) + "%</div></div>"
+			+ "<div class='row card-item'><div class='col-7'><p>Total Profit</p></div>"
+			+ "<div class='col-5 text-right'>" + stats.profit + "</div></div>";
+
+			$(items).appendTo('.profit-labor-stats');
+
+			masonry.reloadItems();
+			masonry.layout();
+		}
+	);
+	// Get logged in users
+	$.post('/managementController',
+		{
+			action: 'getLoggedInUsers'
 		},
 		function(data,status){
-			//alert(data);
+			let users = JSON.parse(data);
+
+			let items = "";
+			jQuery.each( users, function(index, user) {
+				items += "<div class='row card-item'><div class='col-5'><p>" + user.name + "</p></div>"
+				+ "<div class='col-7 text-right'><a href='javascript:void(0);' class='btn btn-danger clock-out-btn' data-id=" + user.id + ">Clock-Out</a></div></div>";
+			});
+
+			$(items).appendTo('.logged-in-workers');
+
+			masonry.reloadItems();
+			masonry.layout();
+		}
+	);
+	// Get vendors
+	$.post('/managementController',
+		{
+			action: 'getVendorsList'
+		},
+		function(data,status){
+			let vendors = JSON.parse(data);
+			
+			let items = "";
+			jQuery.each(vendors, function(index, data) {
+				items += "<div class='row card-item'><div class='col-12'><p>" + data.name + "</p></div></div>";
+			});
+
+			$(items).appendTo('.vendors-list');
+
+			masonry.reloadItems();
+			masonry.layout();
+		}
+	);
+	// Get supply orders
+	$.post('/managementController',
+		{
+			action: 'getSupplyOrders'
+		},
+		function(data,status){
+			let orders = JSON.parse(data);
+			let items = "";
+			jQuery.each(orders, function(index, item) {
+				items += "<div class='order-item-container pl-0'>" + addModal(item)
+					+ "<div class='mb-5 row'><div class='col-8'>" + item.name + "</div><div class='col-4 text-right'><a href='javascript:void(0);' class='btn btn-success view-btn'>View</a></div></div></div>";
+			});
+
+			$(items).appendTo('.supply-orders');
+
+			masonry.reloadItems();
+			masonry.layout();
 		}
 	);
 
-	let currentTotal = 0.00;
-	
-	createItemButtons();
-
-	function createItemButtons(){
-		let buttons = "<div class='row'>"
-					+ createLgButton('Item 1', 'yellow', 'item', 4.99)
-					+ createMdButton('Item 2', 'gray', 'item', 11.99)
-					+ createMdButton('Item 3', 'gray', 'item', 1.99)
-					+ createSmButton('Item 4', 'blue', 'item', 4.99)
-					+ createSmButton('Item 5', 'blue', 'item', 5.99)
-					+ createSmButton('Management', 'pink', 'management')
-					+ createLgButton('Pay', 'yellow', 'transaction')
-					+ createLgButton('Remove Selected', 'yellow', 'delete')
-					+ createLgButton('Remove All', 'yellow', 'delete-all')
-					+ "</div>";
-		$(buttons).appendTo('.menu-btns');
-	}
-
-	function createLgButton(name, color, type, price = 0.0) {
-		return "<div class='btn col-12 card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
-		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div>";
-	}
-	function createMdButton(name, color, type, price = 0.0) {
-		return "<div class='btn col-6 card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
-		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div>";
-	}
-	function createSmButton(name, color, type, price = 0.0) {
-		return "<div class='btn col-4 card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
-		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div>";
-	}
-	function createDisplayItem(name, price) {
-		return "<div class='item'><p class='row'><span class='item-name col-8'>" + name + " </span><span class='item-price col-4 text-right'>" + price + "</span></p></div>";
-	}
-
-	$('.menu-display').on('click', '.item', function() {
-		if($(this).hasClass('selected')){
-			$(this).removeClass('selected');
-		}
-		else{
-			$(this).addClass('selected');
-		}
-	});
-
-	$('.menu-btns').on('click','.menu-btn', function() {
-		handleButtonResponse(this);
-	});
-
-	function handleButtonResponse(button) {
-		switch($(button).attr('data-type'))
-		{
-			case 'item':
-				addMenuItem(button);
-				break;
-			case 'delete':
-				deleteDisplayItem();
-				break;
-			case 'delete-all':
-				deleteAllDisplayItems();
-				break;
-			case 'management':
-				console.log('Management');
-				break;
-			case 'transaction':
-				console.log('transaction');
-				break;
-		}
-	}
-
-	function addMenuItem(item) {
-		if($('.item').length <= 8 ){
-			$(createDisplayItem($(item).attr('data-name'), $(item).attr('data-price'))).appendTo('.menu-item-container');
-			addToTotal(parseFloat($(item).attr('data-price')));
-		}
-	}
-	function deleteDisplayItem() {
-		let price = 0.00;
-		$('.item.selected').each(function() {
-			price += parseFloat($(this).find('.item-price').text());
+	function addModal(item) {
+		let list_items = "";
+		jQuery.each(item.list, function(index, item) {
+			list_items += "<div class='col-7'>" + item.name + "</div><div class='col-2'>$" + item.price + "</div><div class='col-1 text-center'>X</div><div class='col-2 text-right bbtm-black-1'>" + item.quantity + "</div>";
 		});
-		currentTotal -= price;
-		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
-		$('.item.selected').remove();
-	}
-	function deleteAllDisplayItems() {
-		currentTotal = 0.00;
-		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
-		$('.item').remove();
+
+		let modal = "<div class='modal fade show' style='display:none;'><div class='modal-dialog'>"
+				+ "<div class='modal-content'><div class='modal-header border-bottom-0 bb-gray-1'>"
+				+ "<div class='col-12 pl-0'><h4>" + item.name + "</h4></div><div class='col-4 text-right'>"
+				+ "</div></div><div class='modal-body'><div class='row pb-16'>"
+				+ list_items
+				+ "</div><div class='row pt-16'><div class='col-5'><strong>Total</strong></div><div class='col-7 text-right'>" + item.total + "</div>"
+				+ "</div></div><div class='modal-footer border-top-0'>"
+				+ "<a href='javascript:void(0);' class='btn btn-danger modal-close'>Close</a></div></div></div></div>";
+		return modal;
 	}
 
-	function addToTotal(price) {
-		currentTotal += price;
-		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
+	$('.supply-orders').on('click', '.view-btn', function() {
+		$(this).closest('.order-item-container').find('.modal').show();
+	});
+	$('.supply-orders').on('click', '.modal-close', function() {
+		$('.modal').hide();
+	});
+
+	// Add return to menu button
+	addReturnButton();
+	function addReturnButton() {
+		let button = "<a href='javascript:void(0);' class='btn btn-primary go-back-btn'>Go Back</a>";
+		$(button).appendTo('.nav-card .row .right-side');
 	}
-	function removeFromTotal(price) {
-		currentTotal -= price;
-		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
-	} 
+	$('.nav-card').on('click', '.go-back-btn', function() {
+		$('.navigation').submit();
+	});
+
+	// Clock out user
+	$('.logged-in-workers').on('click', '.clock-out-btn', function() {
+		let id = $(this).attr('data-id');
+
+		$.post('/managementController',
+			{
+				action: 'logoutUser',
+				id: id
+			},
+			function(data, status) {
+				alert(data + ' was clocked out.' );
+			}
+		);
+
+		$(this).closest('.card-item').remove();
+	});
+
 });
+
+

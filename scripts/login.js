@@ -63,4 +63,19 @@ $(document).ready( function() {
 
 		return buttons;
 	}
+
+	$('.keypad').on('click', '.enter', function() {
+		let id = $('.keypad-display').text();
+		$.post('/loginController', 
+			{
+				action: "loginUser",
+				passcode: id 
+			},
+			function(data, status){
+				// if(data == "true"){
+					$('.navigation').submit();
+				// }
+			}
+		);
+	});
 });

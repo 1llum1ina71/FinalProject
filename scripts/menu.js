@@ -7,36 +7,26 @@ $(document).ready(function(){
 	    }
 	});
 
-	// Ajax test
-	// This is how we will get and send data from our database
-	$.get('/test', function(data,status) {
-		alert(data);
-	});
-	$.post('/test',
+	let currentTotal = 0.00;
+	let itemList = [];
+	
+	createUtilityButtons();
+
+	// Item buttons
+	$.post('/menuController', 
 		{
-			id: 'This is a post test.'
+			action: 'getFoodItems'
 		},
-		function(data,status){
-			alert(data);
+		function(data,status) {
+			let buttons = "<div class='row'>"
+			jQuery.each( JSON.parse(data), function(index, item) {
+				buttons += createItemButton(item);
+			});
+			buttons += "</div>";
+			$(buttons).appendTo('.item-btns');
 		}
 	);
 
-	let currentTotal = 0.00;
-	
-	createItemButtons();
-	createUtilityButtons();
-
-	function createItemButtons(){
-		let buttons = "<div class='row'>"
-					+ createItemButton('Item 1', 'yellow', 'item', 4.99)
-					+ createItemButton('Item 2', 'gray', 'item', 11.99)
-					+ createItemButton('Item 3', 'gray', 'item', 1.99)
-					+ createItemButton('Item 4', 'blue', 'item', 4.99)
-					+ createItemButton('Item 5', 'blue', 'item', 5.99)
-					+ createItemButton('Item 6', 'yellow', 'item', 4.99)
-					+ "</div>";
-		$(buttons).appendTo('.item-btns');	
-	}
 	function createUtilityButtons() {
 		let buttons = "<div class='row'>"
 					+ createUtilityButton('Management', 'pink', 'management')
@@ -47,25 +37,29 @@ $(document).ready(function(){
 		$(buttons).appendTo('.utility-btns');
 	}
 
-	function createItemButton(name, color, type, price = 0.0) {
-		return "<div class='menu-btn-container col-6 p-0'><div class='card btn menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
-		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div>" + addModal("test") + "</div>";
+	function createItemButton(item) {
+		return "<div class='menu-btn-container col-6 p-0'><div class='card btn menu-btn' data-name='" + item.name + "' data-price='" + item.price + "' data-type='item' data-id='" + item.id + "'>" + item.name + "</div>" + addModal(item) + "</div>";
 	}
 	function createUtilityButton(name, color, type, price = 0.0) {
-		return "<div class='btn col-12 col-lg-6 col-xl-3 card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
+		return "<div class='btn col-12 col-lg-6 card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
 		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div>";
 	}
-	function createDisplayItem(name, price) {
-		return "<div class='item'><p class='row'><span class='item-name col-8'>" + name + " </span><span class='item-price col-4 text-right'>" + price + "</span></p></div>";
+	function createDisplayItem(name, price, id) {
+		return "<div class='item' data-id=" + id + "><p class='row'><span class='item-name col-8'>" + name + " </span><span class='item-price col-4 text-right'>" + price + "</span></p></div>";
 	}
-	function addModal(info) {
+	function addModal(item) {
+		let ingredients = "";
+		jQuery.each(item.make_up, function(index, ingredient) {
+			ingredients += "<li>" + ingredient + "</li>";
+		});
+
 		let modal = "<div class='modal fade show' style='display:none;'><div class='modal-dialog'>"
 				+ "<div class='modal-content'><div class='modal-header border-bottom-0 row'>"
-				+ "<div class='col-8'><h4>Title</h4></div><div class='col-4 text-right'>"
+				+ "<div class='col-8'><h4>" + item.name + "</h4></div><div class='col-4 text-right'>"
 				+ "</div></div><div class='modal-body'><ul>"
-				+ "<li>Item List</li>"
+				+ ingredients
 				+ "</ul></div><div class='modal-footer border-top-0'>"
-				+ "<a href='javascript:void(0);' class='btn btn-primary add-btn'>Add</a><a href='javascript:void(0);' class='btn btn-danger modal-close'>Cancel</a></div></div></div></div>";
+				+ "<a href='javascript:void(0);' class='btn btn-primary add-btn' data-id='" + item.id + "'>Add</a><a href='javascript:void(0);' class='btn btn-danger modal-close'>Cancel</a></div></div></div></div>";
 		return modal;
 	}
 
@@ -82,24 +76,18 @@ $(document).ready(function(){
 		$('.modal').hide();
 	});
 	$('.item-btns').on('click', '.add-btn', function() {
+		// Add to itemList
+		itemList.push($(this).attr('data-id'));
 		addDisplayItem($(this).closest('.menu-btn-container').find('.menu-btn'));
 		$('.modal').hide();
 	});
-
 	$('.item-btns').on('click','.menu-btn', function() {
-		handleButtonResponse(this);
+		openItemDisplay(this);
 	});
 
 	$('.utility-btns').on('click','.menu-btn', function() {
-		handleButtonResponse(this);
-	});
-
-	function handleButtonResponse(button) {
-		switch($(button).attr('data-type'))
+		switch($(this).attr('data-type'))
 		{
-			case 'item':
-				openItemDisplay(button);
-				break;
 			case 'delete':
 				deleteDisplayItem();
 				break;
@@ -107,34 +95,36 @@ $(document).ready(function(){
 				deleteAllDisplayItems();
 				break;
 			case 'management':
-				console.log('Management');
+				goToManagement();
 				break;
 			case 'transaction':
-				console.log('transaction');
+				payForOrder();
 				break;
 		}
-	}
+	});
 
 	function openItemDisplay(button) {
 		$(button).closest('.menu-btn-container').find('.modal').css('display', 'block');
 	}
-
 	function addDisplayItem(item) {
 		if($('.item').length <= 8 ){
-			$(createDisplayItem($(item).attr('data-name'), $(item).attr('data-price'))).appendTo('.menu-item-container');
+			$(createDisplayItem($(item).attr('data-name'), $(item).attr('data-price'), $(item).attr('data-id'))).appendTo('.menu-item-container');
 			addToTotal(parseFloat($(item).attr('data-price')));
 		}
 	}
 	function deleteDisplayItem() {
+		// Remove from listItems
 		let price = 0.00;
 		$('.item.selected').each(function() {
 			price += parseFloat($(this).find('.item-price').text());
+			itemList.splice(itemList.indexOf($(this).attr('data-id')), 1);;
 		});
 		currentTotal -= price;
 		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
 		$('.item.selected').remove();
 	}
 	function deleteAllDisplayItems() {
+		itemList = [];
 		currentTotal = 0.00;
 		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
 		$('.item').remove();
@@ -147,5 +137,35 @@ $(document).ready(function(){
 	function removeFromTotal(price) {
 		currentTotal -= price;
 		$('.total-amt').text('$ ' + currentTotal.toFixed(2));
-	} 
+	}
+
+	// Check if user is a manager
+	function checkIfManager() {
+		return true;
+	}
+	function goToManagement() {
+		if(checkIfManager()) {
+			$('.navigation').submit();	
+		}
+		else{
+			alert('Only a manager can access the management panel.');
+		}
+	}
+	
+	function payForOrder() {
+		// Display Payment screen
+		// Maybe
+
+		// Submit order list
+		$.post('/menuController', 
+			{
+				action: "payForOrder",
+				orderList: itemList
+			},
+			function(data, status){
+				alert('Paid');
+				deleteAllDisplayItems();
+			}
+		);
+	}
 });

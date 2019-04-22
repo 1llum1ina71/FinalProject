@@ -16,4 +16,9 @@
 	</div>
 </div>
 
+<form method="post" class="navigation" action="/menu">
+	<input type="hidden" name="user" value="">
+	<input type="hidden" name="password" value="">
+</form>
+
 <?php include 'layouts/close_page.html'?>

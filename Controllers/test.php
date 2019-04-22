@@ -1,9 +1,12 @@
 <?php 
 $test = "";
-if(isset($_POST['id'])){
-	$test = $_POST['id'];
+if(isset($_POST['action'])){
+	$test = $_POST['action'];
 }
-//include '../Finalproject/env.php';
 
-echo 'ajax test ' . $test;
+$testObj = new \stdClass();
+$testObj->abc = "abc";
+$testObj->test = "";
+$testObj->test2 = "bigTest";
+echo json_encode($testObj);
 ?>

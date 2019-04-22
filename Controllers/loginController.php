@@ -19,12 +19,16 @@
 
 	function loginUser() {
 		// Log user in
-
+		if(isset($_POST['passcode'])){
+			
+		}
 		// Use pincode 
 	}
 
 	function logoutUser() {
-		// log user out
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+		}
 	}
 	 
 ?>
