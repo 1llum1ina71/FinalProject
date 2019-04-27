@@ -1,19 +1,8 @@
 <?php 
 	include 'layouts/open_page.html';
 	include 'layouts/nav.html';
-
-	$user = "";
-	$password = "";
-
-	function checkIfUserIsLoggedIn() {
-		if(isset($_POST['user'])){
-			if(isset($_POST['password'])){
-				$user = $_POST['user'];
-				$password = $_POST['password'];
-				// Send query to database
-			}
-		}		
-	}
+	require './controllers/env.php';
+	require './controllers/auth.php';
 ?>
 
 <div class="container pt-80">
