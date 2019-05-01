@@ -26,6 +26,9 @@
 	    case '/managementController' :
 	    	require __DIR__ . '/controllers/managementController.php';
 	    	break;
+	    case '/userController' :
+	    	require __DIR__ . '/controllers/userController.php';
+	    	break;
 	    default: 
 	    	echo "test";
 	    	header('Location: ' . '/login');

@@ -5,15 +5,13 @@
 	require './controllers/env.php';
 	require './controllers/auth.php';
 
-	function checkIfUserIsManager() {
-		if(isset($_POST['user'])){
-			if(isset($_POST['password'])){
-				$user = $_POST['user'];
-				$password = $_POST['password'];
-				// Send query to database
-			}
-		}		
+	if(!checkIfUserIsManager()) {
+		
 	}
+	else {
+		//echo json_encode(checkIfUserIsManager());
+	}
+	//echo json_encode(checkIfUserIsManager());
 ?>
 
 <div class="container pt-80">
@@ -48,8 +46,7 @@
 </div>
 
 <form method="post" class="navigation" action="/menu">
-	<input type="hidden" name="user" value="<?php echo $user?>">
-	<input type="hidden" name="password" value="<?php echo $password?>">
+	<input class="user" type="hidden" name="user" value=<?php echo $user?>>
 </form>
 
 <?php include 'layouts/close_page.html'?>

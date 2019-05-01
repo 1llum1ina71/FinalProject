@@ -45,9 +45,17 @@ $(document).ready(function(){
 			let users = JSON.parse(data);
 
 			let items = "";
+			
 			jQuery.each( users, function(index, user) {
-				items += "<div class='row card-item'><div class='col-5'><p>" + user.name + "</p></div>"
-				+ "<div class='col-7 text-right'><a href='javascript:void(0);' class='btn btn-danger clock-out-btn' data-id=" + user.id + ">Clock-Out</a></div></div>";
+				// Exclude current user
+				if(user.employId != $('.user').val()){
+					items += "<div class='row card-item'><div class='col-5'><p>" + user.firstName + " " + user.lastName + "</p></div>"
+					+ "<div class='col-7 text-right'><a href='javascript:void(0);' class='btn btn-danger clock-out-btn' data-id=" + user.employId + ">Clock-Out</a></div></div>";
+				}
+				else {
+					items += "<div class='row card-item'><div class='col-5'><p>" + user.firstName + " " + user.lastName + "</p></div>"
+					+ "<div class='col-7 text-right'></div></div>";
+				}
 			});
 
 			$(items).appendTo('.logged-in-workers');
@@ -133,7 +141,7 @@ $(document).ready(function(){
 	$('.logged-in-workers').on('click', '.clock-out-btn', function() {
 		let id = $(this).attr('data-id');
 
-		$.post('/managementController',
+		$.post('/loginController',
 			{
 				action: 'logoutUser',
 				id: id
@@ -142,7 +150,6 @@ $(document).ready(function(){
 				alert(data + ' was clocked out.' );
 			}
 		);
-
 		$(this).closest('.card-item').remove();
 	});
 

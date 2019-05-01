@@ -36,6 +36,7 @@
 	background-color: white !important;
 	display: flex;
   	align-items: center;
+  	background: linear-gradient(rgba(255,0,0,.6), rgba(200,0,0, 0.2));
 }
 .keypad-display h3 {
 	text-align: center;

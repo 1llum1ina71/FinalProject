@@ -1,5 +1,11 @@
 $(document).ready( function() {
 
+	$.ajaxSetup({
+	    beforeSend: function(xhr) {
+	        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+	    }
+	});
+
 	createKeypad();
 
 	$('.key-button').on('click', function() {
@@ -8,16 +14,6 @@ $(document).ready( function() {
 		}
 		if($('.keypad-display').text().length < 4){
 			$('.keypad-display h3').append( $(this).attr('data-value') );
-		}
-	});
-
-	$('.key-button.enter').on('click', function() {
-		console.log($('.keypad-display h3').text());
-		if($('.keypad-display h3').text().length < 4){
-			alert('Passcode must be 4 digits long.');
-		}
-		else {
-			$('.keypad-display').text('');
 		}
 	});
 
@@ -65,17 +61,24 @@ $(document).ready( function() {
 	}
 
 	$('.keypad').on('click', '.enter', function() {
-		let id = $('.keypad-display').text();
 		$.post('/loginController', 
 			{
-				action: "loginUser",
-				passcode: id 
+				action: 'loginUser',
+				passcode: parseInt($('.keypad-display h3').text())
 			},
-			function(data, status){
-				// if(data == "true"){
+			function(data,status) {
+				if(data != 'false') {
+					// Set form fields and post
+					$("#user").val(data);
 					$('.navigation').submit();
-				// }
+				}
+				else {
+					alert('Could not login.');
+				}
 			}
 		);
+
+		$('.keypad-display').text('');
+
 	});
 });

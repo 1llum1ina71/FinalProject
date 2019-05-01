@@ -1,5 +1,5 @@
 <?php include 'layouts/open_page.html';
-	include 'layouts/nav.html';
+	include 'layouts/login-nav.html';
 ?>
 
 <div class="container pt-80">
@@ -17,8 +17,7 @@
 </div>
 
 <form method="post" class="navigation" action="/menu">
-	<input type="hidden" name="user" value="">
-	<input type="hidden" name="password" value="">
+	<input id = "user" type="hidden" name="user" value="">
 </form>
 
 <?php include 'layouts/close_page.html'?>

@@ -1,6 +1,6 @@
 <?php 
 	
-	// Initalize database
+	require './controllers/env.php';
 
 	if(isset($_POST['action']) && !empty($_POST['action'])) {
 	    $action = $_POST['action'];
@@ -40,29 +40,19 @@
 	}
 
 	function getLoggedInUsers() {
-		$users = [];
 
-		$user1 = new \stdClass();
-		$user1->name = "Bobby Simpson";
-		$user1->id = 3;
-		array_push($users, $user1);
+		global $conn;
 
-		$user2 = new \stdClass();
-		$user2->name = "Hank Hill";
-		$user2->id = 4;
-		array_push($users, $user2);
+		$sql = "SELECT * "
+			. "FROM Employee "
+			. "NATURAL JOIN WorkLog "
+			. "WHERE WorkLog.timeLoggedIn IS NOT NULL "
+			. "AND WorkLog.timeLoggedOut IS NULL ";
+
+		$data = $conn->query($sql);
+		$users = $data->fetch_all(MYSQLI_ASSOC);
 
 		echo json_encode($users);
-	}
-
-	function logoutUser() {
-		// Log out user
-		if(isset($_POST['id'])) {
-			// Log out user with id
-		}
-		
-		// Echo back name
-		echo $_POST['id'];
 	}
 
 	function getVendorsList() {

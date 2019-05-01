@@ -11,6 +11,7 @@ $(document).ready(function(){
 	let itemList = [];
 	
 	createUtilityButtons();
+	createTableModal();
 
 	// Item buttons
 	$.post('/menuController', 
@@ -38,11 +39,11 @@ $(document).ready(function(){
 	}
 
 	function createItemButton(item) {
-		return "<div class='menu-btn-container col-6 p-0'><div class='card btn menu-btn' data-name='" + item.name + "' data-price='" + item.price + "' data-type='item' data-id='" + item.id + "'>" + item.name + "</div>" + addModal(item) + "</div>";
+		return "<div class='menu-btn-container col-6' style='padding: 1px 2px !important;'><div class='card btn menu-btn' data-name='" + item.name + "' data-price='" + item.price + "' data-type='item' data-id='" + item.id + "'>" + item.name + "</div>" + addModal(item) + "</div>";
 	}
 	function createUtilityButton(name, color, type, price = 0.0) {
-		return "<div class='btn col-12 col-lg-6 card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
-		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div>";
+		return "<div class='menu-btn-container col-12 col-lg-6' style='padding: 1px 2px !important;'><div class='btn card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
+		+ type + "' " + ((price != 0) ? "data-price='" : "") + price + "'>" + name + "</div></div>";
 	}
 	function createDisplayItem(name, price, id) {
 		return "<div class='item' data-id=" + id + "><p class='row'><span class='item-name col-8'>" + name + " </span><span class='item-price col-4 text-right'>" + price + "</span></p></div>";
@@ -153,19 +154,34 @@ $(document).ready(function(){
 	}
 	
 	function payForOrder() {
-		// Display Payment screen
-		// Maybe
+		$('.table-modal').show();
+	}
 
-		// Submit order list
+	$('.menu-display').on('click', '.table-submit-btn', function() {
 		$.post('/menuController', 
 			{
 				action: "payForOrder",
-				orderList: itemList
+				orderList: itemList,
+				tableNumber: $('#tableNumber').val()
 			},
 			function(data, status){
-				alert('Paid');
 				deleteAllDisplayItems();
+				$('.table-modal').hide();
 			}
 		);
+	});
+	$('.menu-display').on('click', '.table-modal-close', function() {
+		$('.table-modal').hide();
+	});
+
+	function createTableModal() {
+		let modal = "<div class='table-modal modal fade show' style='display:none;'><div class='modal-dialog'>"
+				+ "<div class='modal-content'><div class='modal-header border-bottom-0 row'>"
+				+ "<div class='col-8'><h4>Table Number</h4></div><div class='col-4 text-right'>"
+				+ "</div></div><div class='modal-footer border-top-0'>"
+				+ "<input type='number' name='tableNumber' id='tableNumber' style='width:80%;'>"
+				+ "<a href='javascript:void(0);' class='btn btn-primary table-submit-btn'>Submit</a><a href='javascript:void(0);' class='btn btn-danger table-modal-close'>Cancel</a></div></div></div></div>";
+		$(modal).appendTo('.menu-display');
 	}
+
 });
