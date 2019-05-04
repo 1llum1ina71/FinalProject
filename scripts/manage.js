@@ -17,18 +17,14 @@ $(document).ready(function(){
 		function(data,status) {
 			let stats = JSON.parse(data);
 
-			let items = "<div class='row card-item'><div class='col-7'><p>Total Sales</p></div>"
-			+ "<div class='col-5 text-right'>" + stats.sales + "</div></div>"
-			+ "<div class='row card-item'><div class='col-7'><p>Total Discounts</p></div>"
-			+ "<div class='col-5 text-right'>" + stats.discounts + "</div></div>"
-			+ "<div class='row card-item'><div class='col-7'><p>Total Labor Hours</p></div>"
-			+ "<div class='col-5 text-right'>" + stats.labor_hours + "</div></div>"
+			let items = "<div class='row card-item'><div class='col-7'><p>Total Labor Hours</p></div>"
+			+ "<div class='col-5 text-right'>" + stats.labor_hours + " hrs</div></div>"
 			+ "<div class='row card-item'><div class='col-7'><p>Total Sales</p></div>"
-			+ "<div class='col-5 text-right'>" + stats.labor_wages + "</div></div>"
-			+ "<div class='row card-item'><div class='col-7'><p>Labor Percentage</p></div>"
-			+ "<div class='col-5 text-right'>" + ( stats.labor_percent_of_profit * 100) + "%</div></div>"
+			+ "<div class='col-5 text-right'>$" + stats.sales + "</div></div>"
+			+ "<div class='row card-item'><div class='col-7'><p>Total Discounts</p></div>"
+			+ "<div class='col-5 text-right'>$" + stats.discounts + "</div></div>"
 			+ "<div class='row card-item'><div class='col-7'><p>Total Profit</p></div>"
-			+ "<div class='col-5 text-right'>" + stats.profit + "</div></div>";
+			+ "<div class='col-5 text-right'>$" + stats.profit + "</div></div>";
 
 			$(items).appendTo('.profit-labor-stats');
 
@@ -74,7 +70,8 @@ $(document).ready(function(){
 			
 			let items = "";
 			jQuery.each(vendors, function(index, data) {
-				items += "<div class='row card-item'><div class='col-12'><p>" + data.name + "</p></div></div>";
+				items += "<div class='row card-item vendor-item'><div class='col-7'><p>" + data.name + "</p>"
+					+ "</div><div class='col-5 text-right'><a href='javascript:void(0);' class='btn btn-danger rm-vendor' data-vendor='" + data.name + "'>Remove</a></div></div>";
 			});
 
 			$(items).appendTo('.vendors-list');
@@ -151,6 +148,88 @@ $(document).ready(function(){
 			}
 		);
 		$(this).closest('.card-item').remove();
+	});
+
+	function addEmployeeList() {
+		$.post('/managementController',
+			{
+				action: 'getEmployees'
+			},
+			function(data, status) {
+				let employees = JSON.parse(data);
+
+				let list = "";
+
+				$(list).appendTo('.employee-list');
+			}
+		);
+	}
+
+	$.post('/managementController',
+		{
+			action: 'getEmployees'
+		},
+		function(data, status) {
+		
+			let users = JSON.parse(data);
+			let rows = "<tbody>";
+			
+			jQuery.each(users, function(index, user) {
+				rows += "<tr><th>" + user.employId + "</th>";
+				rows += "<th>" + user.firstName + " " + user.lastName + "</th>";
+				rows += "<th>" + user.jobTitle + "</th></tr>";
+			});	
+
+			rows += "</tbody>";
+			$(rows).appendTo('.datatable');
+			$('.datatable').DataTable({
+				ordering: true,
+				searching: true,
+				responsive: true
+			});
+		}
+	);
+
+	$('.nav-link').on('click', function() {
+		$('.active').removeClass('active');
+		$(this).addClass('active');
+
+		// Show content
+		$('.nav-tab').addClass('d-none');
+		$('.nav-tab#' + $(this).attr('data-target')).addClass('active').removeClass('d-none');
+	});
+	$('.employee-add').on('click', '.employee-add-submit', function() {
+		if($('#first_name').val().length < 1 || $('#last_name').val().length < 1)
+		{		
+			
+		}
+		else {
+			$.post('/managementController',
+				{
+					action: 'addEmployee',
+					first_name: $('#first_name').val(),
+					last_name: $('#last_name').val(),
+					job_title: $('#job_title').val(),
+
+				},
+				function(data, status) {
+					alert('Added');
+					$('#first_name').val("");
+					$('#last_name').val("");
+				}
+			);
+		}
+	});
+	$('.vendors-list').on('click', '.rm-vendor', function() {
+		$.post('/managementController',
+			{
+				action: 'removeVendor',
+				name: $(this).attr('data-vendor')
+			},
+			function(data, status) {
+				
+			});
+		$(this).closest('.vendor-item').remove();
 	});
 
 });

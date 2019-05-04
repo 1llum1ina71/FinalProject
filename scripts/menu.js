@@ -19,7 +19,7 @@ $(document).ready(function(){
 			action: 'getFoodItems'
 		},
 		function(data,status) {
-			let buttons = "<div class='row'>"
+			let buttons = "<div class='row'>";
 			jQuery.each( JSON.parse(data), function(index, item) {
 				buttons += createItemButton(item);
 			});
@@ -39,7 +39,7 @@ $(document).ready(function(){
 	}
 
 	function createItemButton(item) {
-		return "<div class='menu-btn-container col-6' style='padding: 1px 2px !important;'><div class='card btn menu-btn' data-name='" + item.name + "' data-price='" + item.price + "' data-type='item' data-id='" + item.id + "'>" + item.name + "</div>" + addModal(item) + "</div>";
+		return "<div class='menu-btn-container col-6 pagination-item' style='padding: 1px 2px !important;'><div class='card btn menu-btn' data-name='" + item.name + "' data-price='" + item.price + "' data-type='item' data-id='" + item.id + "'>" + item.name + "</div>" + addModal(item) + "</div>";
 	}
 	function createUtilityButton(name, color, type, price = 0.0) {
 		return "<div class='menu-btn-container col-12 col-lg-6' style='padding: 1px 2px !important;'><div class='btn card menu-btn btn-" + color + "' data-name='" + name + "' data-type='" 
@@ -170,6 +170,7 @@ $(document).ready(function(){
 			}
 		);
 	});
+	
 	$('.menu-display').on('click', '.table-modal-close', function() {
 		$('.table-modal').hide();
 	});

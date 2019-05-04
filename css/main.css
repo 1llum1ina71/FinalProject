@@ -100,3 +100,13 @@
     background-color: rgba(0,0,0,1);
     border-right: 2px inset rgba(200,0, 0, .9);
 }
+.nav-link.active, .nav-link:hover {
+    background-color: rgba(200,0, 0, .9) !important;
+	color: white;
+}
+.nav-link {
+	border-radius: 0px !important;
+	background-color: black;
+	color: white;
+}
+

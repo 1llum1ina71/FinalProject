@@ -1,6 +1,7 @@
 <?php 
 
 	// Connect to database
+	require './controllers/env.php';
 
 	// Parse request
 	if(isset($_POST['action']) && !empty($_POST['action'])) {
@@ -21,27 +22,44 @@
 	}
 
 	function getFoodItems() {
+		global $conn;
+
+		$foodQuery = "SELECT type, price, itemId FROM Item ORDER BY RAND() LIMIT 10"; 
+		// demonstration purposes, cut down list size
+		$foodResponse = @mysqli_query($conn, $foodQuery);
+
+		$ingredQuery = $conn->prepare("SELECT Recipe.itemId, Ingredient.Type FROM Recipe NATURAL JOIN Ingredient WHERE Recipe.itemId = ?");
+
+		$ingredQuery->bind_param("i", $itemId);
+		// loop for each item to add to the menu list
+		$num = 0;
 		$items = [];
-		$item1 = new \stdClass();
-		// Get Food item name
-		$item1->name = "Item1";
-		// Get Food item price
-		$item1->price = "9.99";
-		// Get food item ingredients
-		$item1->make_up = ['lettuce', 'tomato', 'onion', 'sourdough bread'];
-		$item1->id = 1;
-		array_push($items, $item1);
+		while($foodRow = $foodResponse->fetch_assoc()){
+			$itemId = $foodRow["itemId"];
+			$item = new \stdClass();
+			$item->name = $foodRow["type"];
+			$item->price = $foodRow["price"];
 
-		$item2 = new \stdClass();
-		// Get Food item name
-		$item2->name = "Item2";
-		// Get Food item price
-		$item2->price = "9.99";
-		// Get food item ingredients
-		$item2->make_up = ['lettuce', 'tomato', 'onion', 'sourdough bread'];
-		$item2->id = 2;
-		array_push($items, $item2);
-
+			// get ingredient information for each item
+			$ingredQuery->execute();
+			$ingredResponse = $ingredQuery->get_result();
+			//loop for each ingredient
+			$ingredients = [];
+			$numIngred = 0;
+			while($ingredRow = $ingredResponse->fetch_assoc()){
+				$ingredient = new \stdClass();
+				$ingredient = $ingredRow["Type"];
+				$ingredients[$numIngred] = $ingredient;
+				$numIngred++;
+			}
+			// attach ingredients to item
+			$item->make_up = $ingredients;
+			$item->id = $foodRow["itemId"];
+			$items[$num] = $item;
+			$num++;
+		}
+		$ingredQuery->close();
+		$conn->close();
 		echo json_encode($items);
 	}
 
